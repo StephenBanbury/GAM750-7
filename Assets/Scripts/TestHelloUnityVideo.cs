@@ -51,6 +51,9 @@ namespace Demo
             mRtcEngine.OnUserJoined = onUserJoined;
             mRtcEngine.OnUserOffline = onUserOffline;
 
+            // Added by me
+            mRtcEngine.OnStreamMessage = OnStreamMessage;
+
             // enable video
             mRtcEngine.EnableVideo();
             // allow camera output callback
@@ -200,6 +203,17 @@ namespace Demo
                 videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.RawImage);
                 videoSurface.SetGameFps(30);
             }
+
+            // Optional: if a data stream is required, here is a good place to create it
+            int streamID = mRtcEngine.CreateDataStream(true, true);
+            Debug.Log("initializeEngine done, data stream id = " + streamID);
+
+            mRtcEngine.SendStreamMessage(streamID, "Hello from GAM750-7!");
+
+        }
+        private void OnStreamMessage(uint userId, int streamId, string data, int length)
+        {
+            Debug.Log($"Message from {userId}: {data}");
         }
 
         public VideoSurface makePlaneSurface(string goName)
