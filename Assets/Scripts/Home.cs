@@ -7,28 +7,26 @@ using UnityEngine.Android;
 #endif
 
 
-namespace Demo
+namespace Assets.Scripts
 {
 
     /// <summary>
-    ///    TestHome serves a game controller object for this application.
+    ///    Serves a game controller object for this application.
     /// </summary>
-    public class TestHome : MonoBehaviour
+    public class Home : MonoBehaviour
     {
 
         // Use this for initialization
 #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
     private ArrayList permissionList = new ArrayList();
 #endif
-        static TestHelloUnityVideo app = null;
+        static Perform app = null;
 
-        private string HomeSceneName = "SceneHome";
+        private string HomeSceneName = "Home";
 
-        private string PlaySceneName = "SceneHelloVideo";
+        private string PlaySceneName = "Perform";
 
-        // PLEASE KEEP THIS App ID IN SAFE PLACE
-        // Get your own App ID at https://dashboard.agora.io/
-        [SerializeField] private string AppID = "your_appid";
+        [SerializeField] private string AppID = "54f15673a8fd43318b10d4e42f8dd781";
 
         void Awake()
         {
@@ -81,7 +79,7 @@ namespace Demo
             // create app if nonexistent
             if (ReferenceEquals(app, null))
             {
-                app = new TestHelloUnityVideo(); // create app
+                app = new Perform(); // create app
                 app.loadEngine(AppID); // load engine
             }
 
@@ -110,7 +108,7 @@ namespace Demo
             {
                 if (!ReferenceEquals(app, null))
                 {
-                    app.onSceneHelloVideoLoaded(); // call this after scene is loaded
+                    app.onScenePerformLoaded(); // call this after scene is loaded
                 }
 
                 SceneManager.sceneLoaded -= OnLevelFinishedLoading;
