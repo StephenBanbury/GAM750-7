@@ -6,10 +6,8 @@ using System.Collections;
 using UnityEngine.Android;
 #endif
 
-
 namespace Assets.Scripts
 {
-
     /// <summary>
     ///    Serves a game controller object for this application.
     /// </summary>
@@ -70,7 +68,7 @@ namespace Assets.Scripts
 #endif
         }
 
-        public void onJoinButtonClicked()
+        public void OnJoinButtonClicked()
         {
             // get parameters (channel name, channel profile, etc.)
             GameObject go = GameObject.Find("ChannelName");
@@ -80,21 +78,21 @@ namespace Assets.Scripts
             if (ReferenceEquals(app, null))
             {
                 app = new Perform(); // create app
-                app.loadEngine(AppID); // load engine
+                app.LoadEngine(AppID); // load engine
             }
 
             // join channel and jump to next scene
-            app.join(field.text);
+            app.Join(field.text);
             SceneManager.sceneLoaded += OnLevelFinishedLoading; // configure GameObject after scene is loaded
             SceneManager.LoadScene(PlaySceneName, LoadSceneMode.Single);
         }
 
-        public void onLeaveButtonClicked()
+        public void OnLeaveButtonClicked()
         {
             if (!ReferenceEquals(app, null))
             {
-                app.leave(); // leave channel
-                app.unloadEngine(); // delete engine
+                app.Leave(); // leave channel
+                app.UnloadEngine(); // delete engine
                 app = null; // delete app
                 SceneManager.LoadScene(HomeSceneName, LoadSceneMode.Single);
             }
@@ -108,7 +106,7 @@ namespace Assets.Scripts
             {
                 if (!ReferenceEquals(app, null))
                 {
-                    app.onScenePerformLoaded(); // call this after scene is loaded
+                    app.OnScenePerformLoaded(); // call this after scene is loaded
                 }
 
                 SceneManager.sceneLoaded -= OnLevelFinishedLoading;
@@ -127,7 +125,7 @@ namespace Assets.Scripts
         {
             if (!ReferenceEquals(app, null))
             {
-                app.unloadEngine();
+                app.UnloadEngine();
             }
         }
     }

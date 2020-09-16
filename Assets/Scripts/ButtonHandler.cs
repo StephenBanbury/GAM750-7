@@ -5,9 +5,8 @@ namespace Assets.Scripts
 {
     public class ButtonHandler : MonoBehaviour
     {
-        public void onButtonClicked(Button button)
+        public void OnButtonClicked(Button button)
         {
-            // which GameObject?
             GameObject go = GameObject.Find("GameController");
             if (go != null)
             {
@@ -20,11 +19,11 @@ namespace Assets.Scripts
 
                 if (button.name == "JoinButton")
                 {
-                    gameController.onJoinButtonClicked();
+                    gameController.OnJoinButtonClicked();
                 }
                 else if (button.name == "LeaveButton")
                 {
-                    gameController.onLeaveButtonClicked();
+                    gameController.OnLeaveButtonClicked();
                 }
             }
         }

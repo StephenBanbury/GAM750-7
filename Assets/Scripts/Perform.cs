@@ -8,7 +8,7 @@ namespace Assets.Scripts
     {
         private IRtcEngine mRtcEngine;
 
-        public void loadEngine(string appId)
+        public void LoadEngine(string appId)
         {
             // start sdk
             Debug.Log("initializeEngine");
@@ -27,7 +27,7 @@ namespace Assets.Scripts
                                     LOG_FILTER.CRITICAL);
         }
 
-        public void join(string channel)
+        public void Join(string channel)
         {
             Debug.Log("calling join (channel = " + channel + ")");
 
@@ -35,9 +35,9 @@ namespace Assets.Scripts
                 return;
 
             // set callbacks (optional)
-            mRtcEngine.OnJoinChannelSuccess = onJoinChannelSuccess;
-            mRtcEngine.OnUserJoined = onUserJoined;
-            mRtcEngine.OnUserOffline = onUserOffline;
+            mRtcEngine.OnJoinChannelSuccess = OnJoinChannelSuccess;
+            mRtcEngine.OnUserJoined = OnUserJoined;
+            mRtcEngine.OnUserOffline = OnUserOffline;
 
             // Added by me
             mRtcEngine.OnStreamMessage = OnStreamMessage;
@@ -54,7 +54,7 @@ namespace Assets.Scripts
             Debug.Log("initializeEngine done, data stream id = " + streamID);
         }
 
-        public string getSdkVersion()
+        public string GetSdkVersion()
         {
             string ver = IRtcEngine.GetSdkVersion();
             if (ver == "2.9.1.45")
@@ -72,7 +72,7 @@ namespace Assets.Scripts
             return ver;
         }
 
-        public void leave()
+        public void Leave()
         {
             Debug.Log("calling leave");
 
@@ -85,7 +85,7 @@ namespace Assets.Scripts
             mRtcEngine.DisableVideoObserver();
         }
 
-        public void unloadEngine()
+        public void UnloadEngine()
         {
             Debug.Log("calling unloadEngine");
 
@@ -114,7 +114,7 @@ namespace Assets.Scripts
 
         // accessing GameObject in Scene1
         // set video transform delegate for statically created GameObject
-        public void onScenePerformLoaded()
+        public void OnScenePerformLoaded()
         {
             Debug.Log("Attach to quad in screen");
             GameObject quad = GameObject.Find("Quad");
@@ -130,7 +130,7 @@ namespace Assets.Scripts
         }
 
         // implement engine callbacks
-        private void onJoinChannelSuccess(string channelName, uint uid, int elapsed)
+        private void OnJoinChannelSuccess(string channelName, uint uid, int elapsed)
         {
             Debug.Log("JoinChannelSuccessHandler: uid = " + uid);
             GameObject textVersionGameObject = GameObject.Find("VersionText");
@@ -139,7 +139,7 @@ namespace Assets.Scripts
 
         // When a remote user joined, this delegate will be called. Typically
         // create a GameObject to render video on it
-        private void onUserJoined(uint uid, int elapsed)
+        private void OnUserJoined(uint uid, int elapsed)
         {
             Debug.Log("onUserJoined: uid = " + uid + " elapsed = " + elapsed);
             // this is called in main thread
@@ -240,7 +240,7 @@ namespace Assets.Scripts
 
         // When remote user is offline, this delegate will be called. Typically
         // delete the GameObject for this user
-        private void onUserOffline(uint uid, USER_OFFLINE_REASON reason)
+        private void OnUserOffline(uint uid, USER_OFFLINE_REASON reason)
         {
             // remove video stream
             Debug.Log("onUserOffline: uid = " + uid + " reason = " + reason);
