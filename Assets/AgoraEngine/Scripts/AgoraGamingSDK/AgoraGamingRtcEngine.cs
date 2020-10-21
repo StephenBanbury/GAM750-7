@@ -344,6 +344,7 @@ namespace agora_gaming_rtc
          */
         public int JoinChannel(string channelName, string info, uint uid)
         {
+            Debug.Log("JoinChannel");
             return JoinChannelByKey(null, channelName, info, uid);
         }
         /** Allows a user to join a channel with token.
@@ -1448,6 +1449,7 @@ namespace agora_gaming_rtc
          */
         public int EnableVideo()
         {
+            Debug.Log("EnableVideo");
             return IRtcEngineNative.enableVideo();
         }
 
@@ -1594,6 +1596,7 @@ namespace agora_gaming_rtc
          */
         public int EnableVideoObserver()
         {
+            Debug.Log("EnableVideoObserver");
             return IRtcEngineNative.enableVideoObserver();
         }
 

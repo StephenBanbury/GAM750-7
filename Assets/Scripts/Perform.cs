@@ -1,5 +1,6 @@
 using UnityEngine;
 using agora_gaming_rtc;
+using UnityEngine.UI;
 
 
 namespace Assets.Scripts
@@ -36,11 +37,11 @@ namespace Assets.Scripts
 
             // set callbacks (optional)
             mRtcEngine.OnJoinChannelSuccess = OnJoinChannelSuccess;
-            mRtcEngine.OnUserJoined = OnUserJoined;
+            //mRtcEngine.OnUserJoined = OnUserJoined;
             mRtcEngine.OnUserOffline = OnUserOffline;
 
             // Added by me
-            mRtcEngine.OnStreamMessage = OnStreamMessage;
+            //mRtcEngine.OnStreamMessage = OnStreamMessage;
 
             mRtcEngine.EnableVideo();
 
@@ -116,31 +117,68 @@ namespace Assets.Scripts
         // set video transform delegate for statically created GameObject
         public void OnScenePerformLoaded()
         {
-            Debug.Log("Attach to quad in screen");
-            GameObject quad = GameObject.Find("Quad");
-            if (ReferenceEquals(quad, null))
+            GameObject quadStandAloneRectangle = GameObject.Find("QuadStandAloneRectangle");
+            GameObject quadStandAloneSquare = GameObject.Find("QuadStandAloneSquare");
+            if (!ReferenceEquals(quadStandAloneRectangle, null))
             {
-                Debug.Log("BBBB: failed to find quad");
-                return;
+                Debug.Log("Attach to QuadStandAloneRectangle");
+                quadStandAloneRectangle.AddComponent<VideoSurface>();
             }
-            else
+            if (!ReferenceEquals(quadStandAloneSquare, null))
             {
-                quad.AddComponent<VideoSurface>();
+                Debug.Log("Attach to QuadStandAloneSquare");
+                quadStandAloneSquare.AddComponent<VideoSurface>();
             }
+            //else
+            //{
+            //    Debug.Log("Attach to quad in screen");
+            //    quadStandAloneRectangle.AddComponent<VideoSurface>();
+            //}
+
+            //GameObject screenObject = GameObject.Find("Screen");
+            //var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
+            //canvasDisplay.gameObject.SetActive(true);
+            //var go = canvasDisplay.transform.GetChild(0).gameObject;
+            //VideoSurface videoSurface = go.GetComponent<VideoSurface>();
+            //go.AddComponent<VideoSurface>();
+
+
+
+            //GameObject quadInScreen = screen.transform.Find("QuadInScreen").gameObject;
+            //if (ReferenceEquals(quadInScreen, null))
+            //{
+            //    Debug.Log("BBBB: failed to find QuadInScreen");
+            //    return;
+            //}
+            //else
+            //{
+            //    Debug.Log("Attach to quad in screen");
+            //    quadInScreen.AddComponent<VideoSurface>();
+            //}
         }
 
         // implement engine callbacks
         private void OnJoinChannelSuccess(string channelName, uint uid, int elapsed)
         {
-            Debug.Log("JoinChannelSuccessHandler: uid = " + uid);
-            GameObject textVersionGameObject = GameObject.Find("VersionText");
+            //ShowMessage("Got to OnJoinChannelSuccess");
+            //Debug.Log("JoinChannelSuccessHandler: uid = " + uid);
+            //GameObject textVersionGameObject = GameObject.Find("VersionText");
             //textVersionGameObject.GetComponent<Text>().text = "SDK Version : " + getSdkVersion();
+        }
+
+        // implement engine callbacks
+        private void ShowMessage(string message)
+        {
+            Debug.Log("ShowMessage: message = " + message);
+            GameObject textMessageGameObject= GameObject.Find("MessageText");
+            textMessageGameObject.GetComponent<Text>().text += " " + message;
         }
 
         // When a remote user joined, this delegate will be called. Typically
         // create a GameObject to render video on it
         private void OnUserJoined(uint uid, int elapsed)
         {
+            ShowMessage("Got to OnUserJoined");
             Debug.Log("onUserJoined: uid = " + uid + " elapsed = " + elapsed);
             // this is called in main thread
 
