@@ -1,4 +1,5 @@
-﻿using UnityEngine.SceneManagement;
+﻿using System;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
 #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
@@ -36,7 +37,7 @@ namespace Assets.Scripts
             // keep this alive across scenes
             DontDestroyOnLoad(this.gameObject);
         }
-
+        
         void Start()
         {
             CheckAppId();
@@ -71,20 +72,31 @@ namespace Assets.Scripts
         public void OnJoinButtonClicked()
         {
             // get parameters (channel name, channel profile, etc.)
-            GameObject go = GameObject.Find("ChannelName");
-            InputField field = go.GetComponent<InputField>();
+            //GameObject go = GameObject.Find("ChannelName");
+            //InputField field = go.GetComponent<InputField>();
 
-            // create app if nonexistent
-            if (ReferenceEquals(app, null))
+            GameObject go = GameObject.Find("CallerID");
+            InputField field = go.GetComponent<InputField>();
+            
+            uint uuid;
+            bool isInt = uint.TryParse(field.text, out uuid);
+
+            if (isInt)
             {
-                app = new Perform(); // create app
-                app.LoadEngine(AppID); // load engine
+                // create app if nonexistent
+                if (ReferenceEquals(app, null))
+                {
+                    app = new Perform(); // create app
+                    app.LoadEngine(AppID); // load engine
+                }
+
+                // join channel and jump to next scene
+                app.Join("NotNearEnough", uuid);
+
+                SceneManager.sceneLoaded += OnLevelFinishedLoading; // configure GameObject after scene is loaded
+                SceneManager.LoadScene(PlaySceneName, LoadSceneMode.Single);
             }
 
-            // join channel and jump to next scene
-            app.Join(field.text);
-            SceneManager.sceneLoaded += OnLevelFinishedLoading; // configure GameObject after scene is loaded
-            SceneManager.LoadScene(PlaySceneName, LoadSceneMode.Single);
         }
 
         public void OnLeaveButtonClicked()

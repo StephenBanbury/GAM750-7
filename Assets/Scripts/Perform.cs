@@ -28,7 +28,7 @@ namespace Assets.Scripts
                                     LOG_FILTER.CRITICAL);
         }
 
-        public void Join(string channel)
+        public void Join(string channel, uint userId)
         {
             Debug.Log("calling join (channel = " + channel + ")");
 
@@ -48,11 +48,13 @@ namespace Assets.Scripts
             // allow camera output callback
             mRtcEngine.EnableVideoObserver();
 
-            mRtcEngine.JoinChannel(channel, null, 0);
+            mRtcEngine.JoinChannel(channel, null, userId);
 
             // Optional: if a data stream is required, here is a good place to create it
-            int streamID = mRtcEngine.CreateDataStream(true, true);
-            Debug.Log("initializeEngine done, data stream id = " + streamID);
+            int streamId = mRtcEngine.CreateDataStream(true, true);
+            Debug.Log("CreateDataStream. streamId = " + streamId);
+
+            mRtcEngine.SendStreamMessage(streamId, $"Message from {userId}: I have joined {channel}");
         }
 
         public string GetSdkVersion()
@@ -129,41 +131,12 @@ namespace Assets.Scripts
                 Debug.Log("Attach to QuadStandAloneSquare");
                 quadStandAloneSquare.AddComponent<VideoSurface>();
             }
-            //else
-            //{
-            //    Debug.Log("Attach to quad in screen");
-            //    quadStandAloneRectangle.AddComponent<VideoSurface>();
-            //}
-
-            //GameObject screenObject = GameObject.Find("Screen");
-            //var canvasDisplay = screenObject.transform.Find("CanvasDisplay");
-            //canvasDisplay.gameObject.SetActive(true);
-            //var go = canvasDisplay.transform.GetChild(0).gameObject;
-            //VideoSurface videoSurface = go.GetComponent<VideoSurface>();
-            //go.AddComponent<VideoSurface>();
-
-
-
-            //GameObject quadInScreen = screen.transform.Find("QuadInScreen").gameObject;
-            //if (ReferenceEquals(quadInScreen, null))
-            //{
-            //    Debug.Log("BBBB: failed to find QuadInScreen");
-            //    return;
-            //}
-            //else
-            //{
-            //    Debug.Log("Attach to quad in screen");
-            //    quadInScreen.AddComponent<VideoSurface>();
-            //}
         }
 
         // implement engine callbacks
         private void OnJoinChannelSuccess(string channelName, uint uid, int elapsed)
         {
-            //ShowMessage("Got to OnJoinChannelSuccess");
-            //Debug.Log("JoinChannelSuccessHandler: uid = " + uid);
-            //GameObject textVersionGameObject = GameObject.Find("VersionText");
-            //textVersionGameObject.GetComponent<Text>().text = "SDK Version : " + getSdkVersion();
+            Debug.Log("JoinChannelSuccessHandler: uid = " + uid);
         }
 
         // implement engine callbacks
@@ -178,33 +151,7 @@ namespace Assets.Scripts
         // create a GameObject to render video on it
         private void OnUserJoined(uint uid, int elapsed)
         {
-            ShowMessage("Got to OnUserJoined");
-            Debug.Log("onUserJoined: uid = " + uid + " elapsed = " + elapsed);
-            // this is called in main thread
-
-            // Not sure why we even need the below code and method makeImageSurface.
-            // Perhaps if we are dynamically creating screens for clients connecting IN ?
-
-
-            // find a game object to render video stream from 'uid'
-            //GameObject go = GameObject.Find(uid.ToString());
-            //if (!ReferenceEquals(go, null))
-            //{
-            //    Debug.Log("go != null");
-            //    return; // reuse
-            //}
-
-            // create a GameObject and assign to this new user
-            //VideoSurface videoSurface = makeImageSurface(uid.ToString());
-
-            //if (!ReferenceEquals(videoSurface, null))
-            //{
-            //    // configure videoSurface
-            //    videoSurface.SetForUser(uid);
-            //    videoSurface.SetEnable(true);
-            //    videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.RawImage);
-            //    videoSurface.SetGameFps(30);
-            //}
+            Debug.Log("Remote user joined: uid = " + uid + " elapsed = " + elapsed);
 
             // Optional: if a data stream is required, here is a good place to create it
             int streamID = mRtcEngine.CreateDataStream(true, true);
@@ -218,66 +165,6 @@ namespace Assets.Scripts
             Debug.Log($"Message from {userId}: {data}");
         }
 
-        //public VideoSurface makePlaneSurface(string goName)
-        //{
-        //    GameObject go = GameObject.CreatePrimitive(PrimitiveType.Plane);
-
-        //    if (go == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    go.name = goName;
-        //    // set up transform
-        //    go.transform.Rotate(-90.0f, 0.0f, 0.0f);
-        //    float yPos = Random.Range(3.0f, 5.0f);
-        //    float xPos = Random.Range(-2.0f, 2.0f);
-        //    go.transform.position = new Vector3(xPos, yPos, 0f);
-        //    go.transform.localScale = new Vector3(0.25f, 0.5f, .5f);
-
-        //    // configure videoSurface
-        //    VideoSurface videoSurface = go.AddComponent<VideoSurface>();
-        //    return videoSurface;
-        //}
-
-        
-        //public VideoSurface makeImageSurface(string goName)
-        //{
-        //    GameObject go = new GameObject();
-
-        //    if (go == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    go.name = goName;
-
-        //    // to be renderered onto
-        //    go.AddComponent<RawImage>();
-
-        //    // make the object draggable
-        //    go.AddComponent<UIElementDragger>();
-
-        //    GameObject canvas = GameObject.Find("Canvas");
-        //    if (canvas != null)
-        //    {
-        //        go.transform.parent = canvas.transform;
-        //    }
-
-        //    // set up transform
-        //    //go.transform.Rotate(0f, 0.0f, 180.0f);
-        //    //float xPos = Random.Range(Offset - Screen.width / 2f, Screen.width / 2f - Offset);
-        //    //float yPos = Random.Range(Offset, Screen.height / 2f - Offset);
-        //    //go.transform.localPosition = new Vector3(xPos, yPos, 0f);
-        //    //go.transform.localScale = new Vector3(3f, 4f, 1f);
-
-        //    // configure videoSurface
-        //    VideoSurface videoSurface = go.AddComponent<VideoSurface>();
-        //    return videoSurface;
-        //}
-
-        // When remote user is offline, this delegate will be called. Typically
-        // delete the GameObject for this user
         private void OnUserOffline(uint uid, USER_OFFLINE_REASON reason)
         {
             // remove video stream
